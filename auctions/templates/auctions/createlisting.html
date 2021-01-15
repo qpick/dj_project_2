@@ -1,0 +1,80 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+        {% if message %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+
+        <div class="jumbotron text-center lighten-4">
+
+            <br><h1><strong>CREATE LISTING</strong></h1> <br> <br>
+            <br>
+            <img src="../media/images/shoes.jpg" style="width: 50%;" class="rounded-circle img-fluid">
+
+            <br> <br> <br>
+
+            <div class="text-left">
+    
+                <form action="{% url 'createlisting' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="title" placeholder="Title">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="description" rows="4" placeholder="Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="category" placeholder="Category" required>
+                            <option value="">Choose a Category</option>
+                            <option value="fashion">Fashion</option>
+                            <option value="tools">Tools</option>
+                            <option value="toys">Toys</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="books">Books</option>
+                        </select>
+<!--                        <select name="category" class="form-control" placeholder="Category" required>-->
+<!--                        {% for item in products %}-->
+<!--                            <option value="{{ product.category }}">{{ product.category }}</option>-->
+<!--                        {% endfor %} </select>-->
+<!--                        <form method="POST" enctype="multipart/form-data">-->
+<!--                            {% csrf_token %}-->
+<!--                            {{ form.as_p }}-->
+<!--                            <button class="btn btn-secondary">Add</button>-->
+<!--                        </form>-->
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" name="subcategory" placeholder="SubCategory">
+                            <option value="">Choose a SubCategory for Accessories</option>
+                            <option value="rings">Rings</option>
+                            <option value="neclaces">Neclaces</option>
+                            <option value="earnings">Earings</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="starting_bid" placeholder="Starting Bid">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="image_link" placeholder="Image Link (Optional)">
+                    </div>
+<!--                    <div class="form-group">-->
+<!--                        -->
+<!--                        <input class="form-control" type="text" name="image" placeholder="Image (Optional)">-->
+<!--                        -->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <form method="POST" enctype="multipart/form-data">-->
+<!--                            {% csrf_token %}-->
+<!--                            {{ form.as_p }}-->
+<!--                            <button class="btn btn-secondary">Add</button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+                    <input class="btn btn-primary" type="submit" value="Create">
+                </form>
+            </div>
+        </div>
+{% endblock %}
