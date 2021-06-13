@@ -18,8 +18,16 @@ pip install -r requirements.txt
 
 ```
 ./manage.py makemigrations auctions
+./manage.py makemigrations users
 ./manage.py migrate
 ```
+
+# Seed Data
+
+```
+./manage.py loaddata data/0001_seed_data_to_database.json 
+```
+
 
 # Fixtures
 

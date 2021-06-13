@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>List {{ ad_listing.title }}</h1>
+            <div class="card mt-2">
+                <div class="card-body">
+                    {% if request.user == ad_listing.owner %}
+                        {% if ad_listing.active %}
+                        <form action="{% url 'auctions:close_ad_listing' %}" method="POST" class="text-right">
+                            {% csrf_token %}
+                            <input type="hidden" name="ad_listing_id" value="{{ ad_listing.id }}">
+                            <input type="submit" class="btn btn-sm btn-success" value="Close the offer">
+                        </form>
+                        {% else %}
+                            <div class="text-right">
+                                <button class="btn btn-sm btn-danger">CLOSED</button>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-6">
+                            <img class="profile-pic" src="{{ ad_listing.photo.url }}" height="350" width="400">
+                        </div>
+                        <div class="col-6">
+                            <h1>{{ ad_listing.title }}</h1>
+                            <div class="row">
+                                <div class="col-6">
+                                    Start price <b>${{ ad_listing.start_bid }}</b>
+                                </div>
+                                <div class="col-6">
+                                    {% if user.is_authenticated %}
+                                        <form action="{% url 'auctions:watch_ad_listing' %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="ad_listing_id" value="{{ ad_listing.id }}">
+                                            {% if ad_listing.watched == True %}
+                                                <input type="submit" class="btn btn-sm btn-danger" value="Remove from Watchlist">
+                                            {% else %}
+                                                <input type="submit" class="btn btn-sm btn-success" value="Add to Watchlist">
+                                            {% endif %}
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                {% if ad_listing.active %}
+                                    <div class="col-12">
+                                        <p>Actual price: {{ ad_listing.current_bid }}</p>
+                                        {% if message %}
+                                            <p>{{ message|safe }}</p>
+                                        {% endif %}
+                                        <form action="{% url 'auctions:offer_bid' ad_listing.id %}" method="POST">
+                                            {% csrf_token %}
+                                            {{ offer_bid_form }}
+                                            <input type="submit" class="btn btn-sm btn-success mt-2" value="Give offer">
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        New Owner is <b>{{ ad_listing.new_owner }}</b> for ${{ ad_listing.current_bid }}
+                                        <button class="btn btn-sm btn-danger">CLOSED</button>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                            <hr>
+                            <p>{{ ad_listing.description }}</p>
+                            <p>Created on date {{ ad_listing.created_at }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 mt-4">
+                            <h4>Comments</h4>
+                            {% if ad_listing.active %}
+                                <div class="form-group">
+                                    <form action="{% url 'auctions:add_comment' ad_listing.id %}" method="POST">
+                                        {% csrf_token %}
+                                        {{ comment_form }}
+                                        <input type="submit" class="mt-2"  value="Add Comment">
+                                    </form>
+                                </div>
+                            {% endif %}
+                            {% for comment in comments %}
+                                <div class="card">
+                                <div class="card-header">{{ comment.user }} commented on {{ comment.createdDate|date:"M, d"  }}</div>
+                                    <div class="card-body">
+                                        <h5 class="card-title"> {{ comment.content }}</h5>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
